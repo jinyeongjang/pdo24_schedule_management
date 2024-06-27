@@ -2,7 +2,6 @@ import React from 'react';
 import HTMLPage from './Page_Html';
 import CSSPage from './Page_CSS';
 import JavaScriptPage from './Page_JavaScript';
-import { BorderBeam } from '@/components/magicui/border-beam.tsx';
 
 interface App {
     id: number;
@@ -32,7 +31,6 @@ const AppDrawer: React.FC<AppDrawerProps> = ({ onAppClick }) => {
                     }`}
                     onClick={() => onAppClick(app)}
                 >
-                    {index === 0 && <BorderBeam />} {/* 첫 번째 버튼에만 BorderBeam 적용 */}
                     <i className={`${app.iconClass} text-gray-700 dark:text-white`}></i>
                     <p className="mt-2 text-md font-semibold text-gray-900 dark:text-white">{app.title}</p>
                 </button>
