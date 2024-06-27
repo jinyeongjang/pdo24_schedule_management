@@ -19,7 +19,6 @@ const apps: App[] = [
     { id: 1, iconClass: 'ci ci-html ci-2x', title: 'HTML', component: HTMLPage },
     { id: 2, iconClass: 'ci ci-css3 ci-2x', title: 'CSS', component: CSSPage },
     { id: 3, iconClass: 'ci ci-js ci-2x', title: 'JavaScript', component: JavaScriptPage },
-    { id: 4, iconClass: 'ci ci-react ci-2x', title: 'react', component: HTMLPage },
 ];
 
 const AppDrawer: React.FC<AppDrawerProps> = ({ onAppClick }) => {
