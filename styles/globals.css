@@ -11,18 +11,25 @@ body {
 }
 
 .bg-custom {
-    background-image: url('../public/img/background1.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
+body:not(.dark) .bg-custom {
+    background-image: url('../public/img/background1.jpg'); /* 라이트 모드 배경 이미지 */
+}
+
+body.dark .bg-custom {
+    background-image: url('../public/img/background1.jpg'); /* 다크 모드 배경 이미지 */
+}
+
 .custom-cursor {
-    cursor: url('../public/cursor/pointer-light.png'), auto;
+    cursor: url('/cursor/pointer-light.png'), auto;
 }
 
 .custom-hover-cursor:hover {
-    cursor: url('../public/cursor/link-light.png'), auto;
+    cursor: url('/cursor/link-light.png'), auto;
 }
 
 @keyframes fadeIn {

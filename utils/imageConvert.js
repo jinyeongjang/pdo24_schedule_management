@@ -1,5 +1,3 @@
-//! 유틸 함수, 블로그 업로드전 사용합니다. 블로그내 첨가된 확장자를 변환합니다.
-
 const fs = require('fs');
 const path = require('path');
 const webp = require('webp-converter');

@@ -2,10 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import TopBar from '../components/TopBar';
 import Modal from '../components/Modal';
 import AppDrawer from '../components/AppDrawer';
-import HTMLPage from '../components/Page_Html';
-import CSSPage from '../components/Page_CSS';
-import JavaScriptPage from '../components/Page_JavaScript';
-// 다른 페이지 컴포넌트도 import
 
 interface App {
     id: number;
