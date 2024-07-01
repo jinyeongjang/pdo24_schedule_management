@@ -62,7 +62,7 @@ const Login: React.FC = () => {
             provider: 'kakao',
             options: {
                 redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL,
-                scopes: ['profile_nickname', 'profile_image'], // 이메일 제외
+                scopes: 'profile_nickname,profile_image', // 이메일 제외
             },
         });
         setLoading(false);
@@ -137,8 +137,8 @@ const Login: React.FC = () => {
                     <FaGoogle className="mr-2" /> 구글로 로그인
                 </button>
                 <button onClick={handleKakaoLogin} className="w-full">
-                    <p>카카오 로그인은 구현중입니다.</p>
-                    <Image src="/kakao_login_large_wide.png" alt="카카오로 로그인" width={370} height={45} />
+                    <p>카카오 로그인은 아직 구현되지 않았습니다.</p>
+                    <Image src="/kakao_login_large_wide.png" alt="카카오로 로그인" width={375} height={45} />
                 </button>
             </div>
         </div>
