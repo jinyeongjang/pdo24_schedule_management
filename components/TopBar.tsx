@@ -1,7 +1,8 @@
-// src/components/TopBar.tsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import DynamicIsland from './DynamicIsland';
+import { RxHamburgerMenu } from 'react-icons/rx';
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarTrigger } from '@/components/ui/menubar';
 
 interface TopBarProps {
     isDarkMode: boolean;
@@ -18,6 +19,16 @@ const TopBar: React.FC<TopBarProps> = ({ isDarkMode, toggleDarkMode }) => {
         return () => clearInterval(intervalId);
     }, []);
 
+    useEffect(() => {
+        let timer: NodeJS.Timeout;
+        if (showDynamicIsland) {
+            timer = setTimeout(() => {
+                setShowDynamicIsland(false);
+            }, 3000); // 3초 후에 다이나믹 아일랜드를 닫습니다.
+        }
+        return () => clearTimeout(timer);
+    }, [showDynamicIsland]);
+
     const formattedTime = currentTime.toLocaleTimeString();
     const formattedDate = currentTime.toLocaleDateString(undefined, {
         year: 'numeric',
@@ -32,14 +43,26 @@ const TopBar: React.FC<TopBarProps> = ({ isDarkMode, toggleDarkMode }) => {
         setShowDynamicIsland(true);
     };
 
-    const closeDynamicIsland = () => {
-        setShowDynamicIsland(false);
-    };
-
     return (
-        <header className="bg-white dark:bg-gray-800 shadow-md p-2 flex justify-between items-center fixed top-0 left-0 right-0 z-50">
-            <h1 className="text-lg font-bold text-gray-900 dark:text-white ml-4">개발블로그</h1>
+        <header className="relative bg-white dark:bg-gray-800 shadow-md p-2 flex flex-wrap justify-between items-center top-0 left-0 right-0 z-50">
             <div className="flex items-center">
+                <Menubar>
+                    <MenubarMenu>
+                        <MenubarTrigger>
+                            <RxHamburgerMenu size={24} />
+                        </MenubarTrigger>
+                        <MenubarContent>
+                            <MenubarItem>HTML</MenubarItem>
+                            <MenubarItem>CSS</MenubarItem>
+                            <MenubarItem>JavaScript</MenubarItem>
+                            <MenubarItem>TypeScript</MenubarItem>
+                            <MenubarSeparator />
+                        </MenubarContent>
+                    </MenubarMenu>
+                </Menubar>
+                <div className="ml-2 md:ml-4 text-lg font-bold text-gray-900 dark:text-white">2024 포도리더스 캘린더.</div>
+            </div>
+            <div className="flex items-center mt-2 md:mt-0">
                 <span className="text-sm font-medium text-gray-900 dark:text-white mr-4">
                     {formattedDate} {formattedTime}
                 </span>
@@ -63,7 +86,7 @@ const TopBar: React.FC<TopBarProps> = ({ isDarkMode, toggleDarkMode }) => {
                     </motion.label>
                 </div>
             </div>
-            <DynamicIsland message={dynamicMessage} show={showDynamicIsland} onClose={closeDynamicIsland} />
+            <DynamicIsland message={dynamicMessage} show={showDynamicIsland} onClose={() => setShowDynamicIsland(false)} />
         </header>
     );
 };

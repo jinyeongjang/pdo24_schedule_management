@@ -2,63 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-    @apply border-border;
-}
-
-body {
-    @apply bg-background text-foreground;
-}
-
-.bg-custom {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-body:not(.dark) .bg-custom {
-    background-image: url('../public/img/background1.jpg'); /* 라이트 모드 배경 이미지 */
-}
-
-body.dark .bg-custom {
-    background-image: url('../public/img/background1.jpg'); /* 다크 모드 배경 이미지 */
-}
-
-.custom-cursor {
-    cursor: url('/cursor/pointer-light.png'), auto;
-}
-
-.custom-hover-cursor:hover {
-    cursor: url('/cursor/link-light.png'), auto;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
-    }
-}
-
-.animate-fade-in {
-    animation: fadeIn 0.5s forwards;
-}
-
-.animate-fade-out {
-    animation: fadeOut 0.5s forwards;
-}
-
+/* Tailwind base layer customization */
 @layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+
+    .bg-custom {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    body:not(.dark) .bg-custom {
+        background-image: url('../public/img/background1.webp'); /* 라이트 모드 배경 이미지 */
+    }
+
+    body.dark .bg-custom {
+        background-image: url('../public/img/background1.webp'); /* 다크 모드 배경 이미지 */
+    }
+
+    .custom-cursor {
+        cursor: url('/cursor/pointer-light.png'), auto;
+    }
+
+    .custom-hover-cursor:hover {
+        cursor: url('/cursor/link-light.png'), auto;
+    }
+
     :root {
         --background: 0 0% 100%;
         --foreground: 222.2 84% 4.9%;
@@ -86,7 +61,7 @@ body.dark .bg-custom {
         --background: 222.2 84% 4.9%;
         --foreground: 210 40% 98%;
         --card: var(--background);
-        --card-foreground: var(--foreground);
+        --card-foreground: var (--foreground);
         --popover: var(--background);
         --popover-foreground: var(--foreground);
         --primary: 210 40% 98%;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Rnd } from 'react-rnd';
 
 interface App {

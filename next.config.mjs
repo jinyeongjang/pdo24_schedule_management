@@ -1,5 +1,30 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import withMDX from '@next/mdx';
+import rehypePrettyCode from 'rehype-pretty-code';
+
+const mdxOptions = {
+    remarkPlugins: [],
+    rehypePlugins: [[rehypePrettyCode, { theme: 'one-dark-pro' }]],
 };
 
-export default nextConfig;
+const config = withMDX({
+    extension: /\.mdx?$/,
+    options: mdxOptions,
+})({
+    pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
+    webpack(config, options) {
+        config.module.rules.push({
+            test: /\.mdx?$/,
+            use: [
+                options.defaultLoaders.babel,
+                {
+                    loader: '@mdx-js/loader',
+                    options: mdxOptions,
+                },
+            ],
+        });
+
+        return config;
+    },
+});
+
+export default config;
