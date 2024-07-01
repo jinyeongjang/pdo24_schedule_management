@@ -42,7 +42,7 @@ const Login: React.FC = () => {
         setLoading(true);
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI },
+            options: { redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL },
         });
         setLoading(false);
 
@@ -61,7 +61,8 @@ const Login: React.FC = () => {
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'kakao',
             options: {
-                redirectTo: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI,
+                redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL,
+                scopes: ['profile_nickname', 'profile_image'], // 이메일 제외
             },
         });
         setLoading(false);
@@ -136,7 +137,8 @@ const Login: React.FC = () => {
                     <FaGoogle className="mr-2" /> 구글로 로그인
                 </button>
                 <button onClick={handleKakaoLogin} className="w-full">
-                    <Image src="/kakao_login_large_wide.png" alt="카카오로 로그인" layout="responsive" width={183} height={45} />
+                    <Image src="/kakao_login_large_wide.png" alt="카카오로 로그인" width={370} height={45} />
+                    <p>카카오 로그인은 아직 구현되지 않았습니다.</p>
                 </button>
             </div>
         </div>
