@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../utils/supabase';
 import { motion } from 'framer-motion';
@@ -13,7 +13,7 @@ const ScheduleView: React.FC = () => {
     const goBack = () => router.back();
     const goToScheduleAdd = () => router.push('/schedule-add');
 
-    const fetchSchedules = useCallback(async () => {
+    const fetchSchedules = async () => {
         setLoading(true);
         const { data, error } = await supabase.from('schedules').select('*').order('created_at', { ascending: false });
 
@@ -23,11 +23,11 @@ const ScheduleView: React.FC = () => {
             setSchedules(data || []);
         }
         setLoading(false);
-    }, []);
+    };
 
-    const subscribeToScheduleChanges = useCallback(() => {
+    const subscribeToScheduleChanges = () => {
         return supabase.channel('public:schedules').on('postgres_changes', { event: '*', schema: 'public', table: 'schedules' }, fetchSchedules).subscribe();
-    }, [fetchSchedules]);
+    };
 
     useEffect(() => {
         fetchSchedules();
@@ -35,7 +35,7 @@ const ScheduleView: React.FC = () => {
         return () => {
             supabase.removeChannel(channel);
         };
-    }, [fetchSchedules, subscribeToScheduleChanges]);
+    }, []);
 
     useEffect(() => {
         if (router.query.success === 'true') {

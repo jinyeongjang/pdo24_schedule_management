@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { supabase } from '../utils/supabase';
-import { FaGoogle } from 'react-icons/fa';
 import Image from 'next/image';
+import { supabase } from '../utils/supabase';
 
 const Login: React.FC = () => {
     const router = useRouter();
@@ -40,30 +39,13 @@ const Login: React.FC = () => {
 
     const handleGoogleLogin = async () => {
         setLoading(true);
+        const redirectTo = process.env.NODE_ENV === 'development'
+            ? process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI
+            : process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI_PROD;
+
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL },
-        });
-        setLoading(false);
-
-        if (error) {
-            setError(error.message);
-        } else {
-            setSuccessMessage('로그인에 성공하였습니다.');
-            setTimeout(() => {
-                router.push('/'); // 로그인 후 메인 페이지로 이동
-            }, 2000);
-        }
-    };
-
-    const handleKakaoLogin = async () => {
-        setLoading(true);
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'kakao',
-            options: {
-                redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL,
-                scopes: 'profile_nickname,profile_image', // 이메일 제외
-            },
+            options: { redirectTo },
         });
         setLoading(false);
 
@@ -130,15 +112,8 @@ const Login: React.FC = () => {
                 </div>
             </form>
             <div className="mt-6 flex flex-col space-y-4 w-full max-w-md">
-                <button
-                    onClick={handleGoogleLogin}
-                    className="w-full py-2 px-4 bg-red-500 text-white rounded-lg shadow-md flex items-center justify-center transition-transform transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 mb-2"
-                >
-                    <FaGoogle className="mr-2" /> 구글로 로그인
-                </button>
-                <button onClick={handleKakaoLogin} className="w-full">
-                    <p>카카오 로그인은 아직 구현되지 않았습니다.</p>
-                    <Image src="/kakao_login_large_wide.png" alt="카카오로 로그인" width={375} height={45} />
+                <button onClick={handleGoogleLogin} className="w-full flex items-center justify-center">
+                    <Image src="/google_login_large_wide.png" alt="구글로 로그인" width={240} height={50} />
                 </button>
             </div>
         </div>

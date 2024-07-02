@@ -2,25 +2,26 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../utils/supabase';
 
-const Signup: React.FC = () => {
+const Signup = () => {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState(null);
 
-    const handleSignup = async (e: React.FormEvent) => {
+    const handleSignup = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
-            setError('비밀번호가 일치하지 않습니다.');
+            setError('Passwords do not match');
             return;
         }
 
         setLoading(true);
         setError(null);
 
-        const { data, error } = await supabase.auth.signUp({
+        const { error } = await supabase.auth.signUp({
             email,
             password,
         });
@@ -30,12 +31,11 @@ const Signup: React.FC = () => {
         if (error) {
             setError(error.message);
         } else {
-            router.push('/login'); // 회원가입 후 로그인 페이지로 이동
+            setSuccessMessage('회원가입이 완료되었습니다.');
+            setTimeout(() => {
+                router.push('/login'); // 회원가입 후 로그인 페이지로 이동
+            }, 2000);
         }
-    };
-
-    const goBack = () => {
-        router.back();
     };
 
     return (
@@ -43,6 +43,7 @@ const Signup: React.FC = () => {
             <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">회원가입</h1>
             <form onSubmit={handleSignup} className="w-full max-w-md bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg space-y-6">
                 {error && <p className="text-red-500">{error}</p>}
+                {successMessage && <p className="text-green-500">{successMessage}</p>}
                 <div>
                     <label htmlFor="email" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
                         이메일
@@ -87,18 +88,11 @@ const Signup: React.FC = () => {
                 </div>
                 <div className="flex justify-between items-center space-x-4">
                     <button
-                        type="button"
-                        onClick={goBack}
-                        className="flex-1 py-2 px-4 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                        이전으로
-                    </button>
-                    <button
                         type="submit"
                         className="flex-1 py-2 px-4 bg-blue-500 text-white rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         disabled={loading}
                     >
-                        {loading ? '가입 중...' : '회원가입'}
+                        {loading ? '회원가입 중...' : '회원가입'}
                     </button>
                 </div>
             </form>
