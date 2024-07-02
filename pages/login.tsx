@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 import { supabase } from '../utils/supabase';
+import { FaGoogle } from 'react-icons/fa';
 
 const Login: React.FC = () => {
     const router = useRouter();
@@ -39,13 +39,11 @@ const Login: React.FC = () => {
 
     const handleGoogleLogin = async () => {
         setLoading(true);
-        const redirectTo = process.env.NODE_ENV === 'development'
-            ? process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI
-            : process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI_PROD;
-
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo },
+            options: {
+                redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URI,
+            },
         });
         setLoading(false);
 
@@ -112,8 +110,11 @@ const Login: React.FC = () => {
                 </div>
             </form>
             <div className="mt-6 flex flex-col space-y-4 w-full max-w-md">
-                <button onClick={handleGoogleLogin} className="w-full flex items-center justify-center">
-                    <Image src="/google_login_large_wide.png" alt="구글로 로그인" width={240} height={50} />
+                <button
+                    onClick={handleGoogleLogin}
+                    className="w-full py-2 px-4 bg-red-500 text-white rounded-lg shadow-md flex items-center justify-center transition-transform transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 mb-2"
+                >
+                    <FaGoogle className="mr-2" /> 구글로 로그인
                 </button>
             </div>
         </div>
