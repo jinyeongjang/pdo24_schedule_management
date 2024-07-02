@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { supabase } from '../utils/supabase';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { supabase } from '../utils/supabase';
 
 const ScheduleAdd: React.FC = () => {
     const router = useRouter();
@@ -15,27 +15,26 @@ const ScheduleAdd: React.FC = () => {
 
     useEffect(() => {
         const checkUser = async () => {
-            const { data, error } = await supabase.auth.getUser();
-            if (error) {
-                console.error('Error checking user:', error.message);
-            } else if (data?.user) {
-                setUser(data.user);
-            } else {
-                router.push('/login');
-            }
+            const { data } = await supabase.auth.getUser();
+            setUser(data.user);
         };
 
         checkUser();
-    }, [router]);
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!user) {
+            setError('인증된 사용자만 등록이 가능합니다');
+            return;
+        }
         if (!title || !description || !dateTime) {
             setError('모든 필드를 입력해주세요.');
             return;
         }
 
         setLoading(true);
+        setError(null);
 
         // 선택한 날짜와 시간을 UTC+9로 변환
         const kstDateTime = new Date(dateTime.getTime() + 9 * 60 * 60 * 1000);
@@ -47,17 +46,15 @@ const ScheduleAdd: React.FC = () => {
                 description,
                 date: kstDateTime.toISOString(),
                 created_at: kstCreatedAt.toISOString(),
-                user_id: user?.id,
             },
         ]);
 
         setLoading(false);
 
         if (error) {
-            console.error('Error inserting data:', error.message);
+            console.error('Error inserting data:', error);
             setError('데이터 삽입 중 오류가 발생했습니다.');
         } else {
-            console.log('Data inserted:', data);
             setTitle('');
             setDescription('');
             setDateTime(null);
@@ -65,12 +62,26 @@ const ScheduleAdd: React.FC = () => {
         }
     };
 
+    if (!user) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">
+                <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">일정 등록</h1>
+                <p className="text-lg text-red-500">인증된 사용자만 등록이 가능합니다</p>
+                <button
+                    onClick={() => router.push('/login')}
+                    className="mt-4 py-2 px-4 bg-blue-500 text-white rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                    로그인 페이지로 이동
+                </button>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">
             <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">일정 등록</h1>
-            <p className="mb-8 text-lg text-gray-700 dark:text-gray-300">새로운 일정을 등록하세요</p>
-            {error && <p className="text-red-500">{error}</p>}
-            <form onSubmit={handleSubmit} className="w-full max-w-lg bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg space-y-6">
+            <form onSubmit={handleSubmit} className="w-full max-w-md bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg space-y-6">
+                {error && <p className="text-red-500">{error}</p>}
                 <div>
                     <label htmlFor="title" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
                         일정 제목
@@ -104,7 +115,7 @@ const ScheduleAdd: React.FC = () => {
                     </label>
                     <DatePicker
                         selected={dateTime}
-                        onChange={(date) => setDateTime(date)}
+                        onChange={(date: Date | null) => setDateTime(date)}
                         showTimeSelect
                         dateFormat="yyyy-MM-dd HH:mm"
                         className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
