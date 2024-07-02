@@ -1,30 +1,9 @@
-import withMDX from '@next/mdx';
-import rehypePrettyCode from 'rehype-pretty-code';
-
-const mdxOptions = {
-    remarkPlugins: [],
-    rehypePlugins: [[rehypePrettyCode, { theme: 'one-dark-pro' }]],
-};
-
-const config = withMDX({
-    extension: /\.mdx?$/,
-    options: mdxOptions,
-})({
-    pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'],
-    webpack(config, options) {
-        config.module.rules.push({
-            test: /\.mdx?$/,
-            use: [
-                options.defaultLoaders.babel,
-                {
-                    loader: '@mdx-js/loader',
-                    options: mdxOptions,
-                },
-            ],
-        });
-
-        return config;
+module.exports = {
+    env: {
+        NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+        NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+        NEXT_PUBLIC_GOOGLE_CLIENT_SECRET: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
+        NEXT_PUBLIC_GOOGLE_REDIRECT_URI: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
     },
-});
-
-export default config;
+};

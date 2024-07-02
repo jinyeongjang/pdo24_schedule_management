@@ -1,3 +1,4 @@
+// pages/login.tsx
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../utils/supabase';
@@ -41,7 +42,7 @@ const Login: React.FC = () => {
         setLoading(true);
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: process.env.NEXT_PUBLIC_SUPABASE_REDIRECT_URI },
+            options: { redirectTo: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI },
         });
         setLoading(false);
 
