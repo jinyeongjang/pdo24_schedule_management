@@ -25,13 +25,10 @@ const ScheduleView: React.FC = () => {
         setLoading(false);
     };
 
-    const subscribeToScheduleChanges = () => {
-        return supabase.channel('public:schedules').on('postgres_changes', { event: '*', schema: 'public', table: 'schedules' }, fetchSchedules).subscribe();
-    };
-
     useEffect(() => {
         fetchSchedules();
-        const channel = subscribeToScheduleChanges();
+        const channel = supabase.channel('public:schedules').on('postgres_changes', { event: '*', schema: 'public', table: 'schedules' }, fetchSchedules).subscribe();
+
         return () => {
             supabase.removeChannel(channel);
         };

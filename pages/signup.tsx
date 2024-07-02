@@ -2,24 +2,25 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../utils/supabase';
 
-const Signup = () => {
+const Signup: React.FC = () => {
     const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const [successMessage, setSuccessMessage] = useState(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-    const handleSignup = async (e) => {
+    const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (password !== confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
-
         setLoading(true);
         setError(null);
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            setLoading(false);
+            return;
+        }
 
         const { error } = await supabase.auth.signUp({
             email,
@@ -73,11 +74,11 @@ const Signup = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="confirm-password" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label htmlFor="confirmPassword" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
                         비밀번호 확인
                     </label>
                     <input
-                        id="confirm-password"
+                        id="confirmPassword"
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
