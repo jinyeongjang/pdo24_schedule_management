@@ -52,10 +52,10 @@ const TopBar: React.FC<TopBarProps> = ({ isDarkMode, toggleDarkMode }) => {
                             <RxHamburgerMenu size={24} />
                         </MenubarTrigger>
                         <MenubarContent>
-                            <MenubarItem>HTML</MenubarItem>
-                            <MenubarItem>CSS</MenubarItem>
-                            <MenubarItem>JavaScript</MenubarItem>
-                            <MenubarItem>TypeScript</MenubarItem>
+                            <MenubarItem>일정 확인</MenubarItem>
+                            <MenubarItem>일정 등록</MenubarItem>
+                            <MenubarItem>로그인</MenubarItem>
+                            <MenubarItem>회원가입</MenubarItem>
                             <MenubarSeparator />
                         </MenubarContent>
                     </MenubarMenu>

@@ -2,20 +2,38 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '../../../utils/supabase';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const accessToken = req.headers['access-token'] as string;
-    const refreshToken = req.headers['refresh-token'] as string;
+    const code = req.query.code as string;
 
-    if (!accessToken || !refreshToken) {
-        return res.status(400).json({ error: 'Access token and refresh token are required' });
+    const response = await fetch(`https://kauth.kakao.com/oauth/token`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            client_id: process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID!,
+            redirect_uri: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI_PROD! : process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI!,
+            code,
+            grant_type: 'authorization_code',
+        }),
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+        return res.status(400).json({ error: data.error });
     }
 
-    const { data, error } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
+    const { access_token } = data;
+
+    const { error } = await supabase.auth.signInWithIdToken({
+        provider: 'kakao',
+        token: {
+            access_token,
+        },
     });
 
     if (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(400).json({ error: error.message });
     }
 
     res.redirect('/');

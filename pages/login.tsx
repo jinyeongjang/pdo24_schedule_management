@@ -1,8 +1,8 @@
-// pages/login.tsx
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../utils/supabase';
 import { FaGoogle } from 'react-icons/fa';
+import { SiKakaotalk } from 'react-icons/si';
 
 const Login: React.FC = () => {
     const router = useRouter();
@@ -34,7 +34,7 @@ const Login: React.FC = () => {
             setSuccessMessage('로그인에 성공하였습니다.');
             setTimeout(() => {
                 router.push('/'); // 로그인 후 메인 페이지로 이동
-            }, 2000);
+            }, 1000);
         }
     };
 
@@ -42,7 +42,30 @@ const Login: React.FC = () => {
         setLoading(true);
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI },
+            options: {
+                redirectTo: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
+            },
+        });
+        setLoading(false);
+
+        if (error) {
+            setError(error.message);
+        } else {
+            setSuccessMessage('로그인에 성공하였습니다.');
+            setTimeout(() => {
+                router.push('/'); // 로그인 후 메인 페이지로 이동
+            }, 2000);
+        }
+    };
+
+    const handleKakaoLogin = async () => {
+        setLoading(true);
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'kakao',
+            options: {
+                redirectTo: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI,
+                scopes: 'account_email, profile_nickname, profile_image', // account_email을 제외한 동의 항목
+            },
         });
         setLoading(false);
 
@@ -114,6 +137,12 @@ const Login: React.FC = () => {
                     className="w-full py-2 px-4 bg-red-500 text-white rounded-lg shadow-md flex items-center justify-center transition-transform transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 mb-2"
                 >
                     <FaGoogle className="mr-2" /> 구글로 로그인
+                </button>
+                <button
+                    onClick={handleKakaoLogin}
+                    className="w-full py-2 px-4 bg-yellow-500 text-white rounded-lg shadow-md flex items-center justify-center transition-transform transform hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                >
+                    <SiKakaotalk className="mr-2" /> 카카오로 로그인
                 </button>
             </div>
         </div>
