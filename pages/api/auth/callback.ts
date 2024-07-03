@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '../../../utils/supabase';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     const code = req.query.code as string;
 
     const response = await fetch(`https://kauth.kakao.com/oauth/token`, {
