@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../utils/supabase';
-import { LuHome, LuCalendarPlus, LuCalendarCheck2, LuCalendar, LuSettings, LuLogOut, LuKeyRound, LuUserPlus, LuUser } from 'react-icons/lu';
+import { LuHome, LuCalendarPlus, LuCalendarCheck2, LuSettings, LuLogOut, LuKeyRound, LuUserPlus } from 'react-icons/lu';
+import { BiBible } from 'react-icons/bi';
 
 const NavigationBar: React.FC = () => {
     const router = useRouter();
@@ -40,10 +41,22 @@ const NavigationBar: React.FC = () => {
                         className={`flex flex-col items-center focus:outline-none hover:text-blue-500 dark:hover:text-blue-400 ${
                             selected === 'home' ? 'text-blue-500 dark:text-blue-400' : 'text-gray-800 dark:text-white'
                         }`}
-                        onClick={() => handleNavClick('')}
+                        onClick={() => handleNavClick('/')}
                     >
                         <LuHome size={24} />
                         <span className="text-xs mt-1">메인</span>
+                    </button>
+                </li>
+                {/* // qtcheck 페이지 추가 */}
+                <li className="py-2">
+                    <button
+                        className={`flex flex-col items-center focus:outline-none hover:text-blue-500 dark:hover:text-blue-400 ${
+                            selected === 'qtcheck-view' ? 'text-blue-500 dark:text-blue-400' : 'text-gray-800 dark:text-white'
+                        }`}
+                        onClick={() => handleNavClick('qtcheck-add')}
+                    >
+                        <BiBible size={24} />
+                        <span className="text-xs mt-1">큐티 체크</span>
                     </button>
                 </li>
                 <li className="py-2">
@@ -68,17 +81,7 @@ const NavigationBar: React.FC = () => {
                         <span className="text-xs mt-1">일정 등록</span>
                     </button>
                 </li>
-                <li className="py-2">
-                    <button
-                        className={`flex flex-col items-center focus:outline-none hover:text-blue-500 dark:hover:text-blue-400 ${
-                            selected === 'calendar' ? 'text-blue-500 dark:text-blue-400' : 'text-gray-800 dark:text-white'
-                        }`}
-                        onClick={() => handleNavClick('calendar')}
-                    >
-                        <LuCalendar size={24} />
-                        <span className="text-xs mt-1">달력</span>
-                    </button>
-                </li>
+
                 <li className="py-2">
                     <button
                         className={`flex flex-col items-center focus:outline-none hover:text-blue-500 dark:hover:text-blue-400 ${
@@ -116,28 +119,15 @@ const NavigationBar: React.FC = () => {
                         </li>
                     </>
                 ) : (
-                    <>
-                        <li className="py-2">
-                            <button
-                                className={`flex flex-col items-center focus:outline-none hover:text-blue-500 dark:hover:text-blue-400 ${
-                                    selected === 'my-page' ? 'text-blue-500 dark:text-blue-400' : 'text-gray-800 dark:text-white'
-                                }`}
-                                onClick={() => handleNavClick('my-page')}
-                            >
-                                <LuUser size={24} />
-                                <span className="text-xs mt-1">마이페이지</span>
-                            </button>
-                        </li>
-                        <li className="py-2">
-                            <button
-                                className="flex flex-col items-center focus:outline-none hover:text-blue-500 dark:hover:text-blue-400 text-gray-800 dark:text-white"
-                                onClick={handleLogout}
-                            >
-                                <LuLogOut size={24} />
-                                <span className="text-xs mt-1">로그아웃</span>
-                            </button>
-                        </li>
-                    </>
+                    <li className="py-2">
+                        <button
+                            className="flex flex-col items-center focus:outline-none hover:text-blue-500 dark:hover:text-blue-400 text-gray-800 dark:text-white"
+                            onClick={handleLogout}
+                        >
+                            <LuLogOut size={24} />
+                            <span className="text-xs mt-1">로그아웃</span>
+                        </button>
+                    </li>
                 )}
             </ul>
         </nav>

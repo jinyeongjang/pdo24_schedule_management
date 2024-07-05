@@ -27,7 +27,19 @@ const ScheduleView: React.FC = () => {
 
     useEffect(() => {
         fetchSchedules();
-        const channel = supabase.channel('public:schedules').on('postgres_changes', { event: '*', schema: 'public', table: 'schedules' }, fetchSchedules).subscribe();
+
+        const channel = supabase
+            .channel('realtime:schedules')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'schedules' }, (payload) => {
+                if (payload.eventType === 'INSERT') {
+                    setSchedules((current) => [payload.new, ...current]);
+                } else if (payload.eventType === 'UPDATE') {
+                    setSchedules((current) => current.map((item) => (item.id === payload.new.id ? payload.new : item)));
+                } else if (payload.eventType === 'DELETE') {
+                    setSchedules((current) => current.filter((item) => item.id !== payload.old.id));
+                }
+            })
+            .subscribe();
 
         return () => {
             supabase.removeChannel(channel);

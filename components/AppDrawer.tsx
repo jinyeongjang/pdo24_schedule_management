@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { LuCalendarPlus, LuCalendarCheck2, LuKeyRound, LuLogOut, LuUser, LuUserPlus } from 'react-icons/lu';
+import { BiBible } from 'react-icons/bi';
 import { supabase } from '../utils/supabase';
 import { useRouter } from 'next/router';
 
@@ -17,10 +18,11 @@ interface AppDrawerProps {
 }
 
 const initialApps: App[] = [
-    { id: 1, icon: <LuCalendarCheck2 size={32} />, title: '일정 확인', tooltip: '일정을 확인합니다', path: '/schedule-view' },
-    { id: 2, icon: <LuCalendarPlus size={32} />, title: '일정 등록', tooltip: '새로운 일정을 등록합니다', path: '/schedule-add' },
-    { id: 3, icon: <LuKeyRound size={32} />, title: '로그인', tooltip: '일정을 등록하거나 수정하려면 로그인이 필요합니다.', path: '/login' },
-    { id: 4, icon: <LuUserPlus size={32} />, title: '회원가입', tooltip: '새로운 계정을 생성합니다', path: '/signup' },
+    { id: 1, icon: <BiBible size={32} />, title: '큐티 체크', tooltip: '큐티 횟수를 체크합니다', path: '/qtcheck-add' },
+    { id: 2, icon: <LuCalendarCheck2 size={32} />, title: '일정 확인', tooltip: '일정을 확인합니다', path: '/schedule-view' },
+    { id: 3, icon: <LuCalendarPlus size={32} />, title: '일정 등록', tooltip: '새로운 일정을 등록합니다', path: '/schedule-add' },
+    { id: 4, icon: <LuKeyRound size={32} />, title: '로그인', tooltip: '일정을 등록하거나 수정하려면 로그인이 필요합니다.', path: '/login' },
+    { id: 5, icon: <LuUserPlus size={32} />, title: '회원가입', tooltip: '새로운 계정을 생성합니다', path: '/signup' },
 ];
 
 const AppDrawer: React.FC<AppDrawerProps> = ({ onAppClick }) => {
@@ -68,7 +70,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({ onAppClick }) => {
 
     const filteredApps = apps.filter((app) => {
         if (user) {
-            return app.id !== 3 && app.id !== 4; // Remove "로그인" and "회원가입" if user is logged in
+            return app.id !== 4 && app.id !== 5; // Remove "로그인" and "회원가입" if user is logged in
         }
         return true;
     });
@@ -105,7 +107,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({ onAppClick }) => {
                                 <div
                                     className="relative p-4 bg-gray-200 dark:bg-gray-800 shadow-md rounded-xl flex flex-col items-center justify-center transition-transform transform hover:scale-105 hover:shadow-xl custom-hover-cursor"
                                     onClick={() => router.push('/my-page')}
-                                    onMouseEnter={() => showTooltip(5, '마이페이지')}
+                                    onMouseEnter={() => showTooltip(6, '마이페이지')}
                                     onMouseLeave={hideTooltip}
                                 >
                                     <div className="text-gray-700 dark:text-white">
@@ -116,7 +118,7 @@ const AppDrawer: React.FC<AppDrawerProps> = ({ onAppClick }) => {
                                 <div
                                     className="relative p-4 bg-gray-200 dark:bg-gray-800 shadow-md rounded-xl flex flex-col items-center justify-center transition-transform transform hover:scale-105 hover:shadow-xl custom-hover-cursor"
                                     onClick={handleLogout}
-                                    onMouseEnter={() => showTooltip(6, '로그아웃')}
+                                    onMouseEnter={() => showTooltip(7, '로그아웃')}
                                     onMouseLeave={hideTooltip}
                                 >
                                     <div className="text-gray-700 dark:text-white">
