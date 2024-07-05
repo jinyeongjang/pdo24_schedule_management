@@ -5,14 +5,20 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { supabase } from '../utils/supabase';
 import { v4 as uuidv4 } from 'uuid';
 
+// 사용자 정보 타입 정의
+interface User {
+    id: string;
+    [key: string]: any;
+}
+
 // 일정 추가 페이지 컴포넌트
 const ScheduleAdd: React.FC = () => {
     const router = useRouter();
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const [title, setTitle] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
     const [dateTime, setDateTime] = useState<Date | null>(null);
-    const [loading, setLoading] = useState(false);
-    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [user, setUser] = useState<User | null>(null);
 
     // 사용자 정보 가져오기
     useEffect(() => {
