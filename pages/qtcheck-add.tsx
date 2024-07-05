@@ -6,13 +6,6 @@ import { supabase } from '../utils/supabase';
 import { v4 as uuidv4 } from 'uuid';
 import { motion } from 'framer-motion';
 
-// 사용자 정보 타입 정의
-interface User {
-    id: string;
-    [key: string]: any;
-}
-
-// 큐티 추가 페이지 컴포넌트
 const QtCheckAdd: React.FC = () => {
     const router = useRouter();
     const [title, setTitle] = useState<string>('');
@@ -21,9 +14,8 @@ const QtCheckAdd: React.FC = () => {
     const [wordCount, setWordCount] = useState<number>(0);
     const [qtCount, setQtCount] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<any>(null);
 
-    // 사용자 정보 가져오기
     useEffect(() => {
         const fetchUser = async () => {
             const { data } = await supabase.auth.getUser();
@@ -34,12 +26,10 @@ const QtCheckAdd: React.FC = () => {
         fetchUser();
     }, []);
 
-    // 뒤로 가기 버튼 핸들러
     const goBack = () => {
         router.back();
     };
 
-    // 폼 제출 핸들러
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!title || !description || !dateTime || !user || wordCount <= 0 || qtCount <= 0) {
@@ -53,7 +43,6 @@ const QtCheckAdd: React.FC = () => {
         const kstDateTime = new Date(dateTime.getTime() + 9 * 60 * 60 * 1000);
         const kstCreatedAt = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
 
-        // 큐티 데이터베이스에 삽입
         const { data, error } = await supabase.from('qtcheck').insert([
             {
                 id: uuidv4(),
@@ -82,13 +71,11 @@ const QtCheckAdd: React.FC = () => {
         }
     };
 
-    // 증가 및 감소 버튼 핸들러
     const incrementWordCount = () => setWordCount((prev) => prev + 1);
     const decrementWordCount = () => setWordCount((prev) => (prev > 0 ? prev - 1 : 0));
     const incrementQtCount = () => setQtCount((prev) => prev + 1);
     const decrementQtCount = () => setQtCount((prev) => (prev > 0 ? prev - 1 : 0));
 
-    // 사용자가 인증되지 않은 경우
     if (!user) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">
@@ -104,7 +91,6 @@ const QtCheckAdd: React.FC = () => {
         );
     }
 
-    // 큐티 등록 폼
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">
             <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">말씀 및 큐티 등록</h1>
@@ -141,48 +127,52 @@ const QtCheckAdd: React.FC = () => {
                     <label htmlFor="wordCount" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
                         말씀 횟수
                     </label>
-                    <div className="flex items-center space-x-4">
-                        <motion.button
-                            whileTap={{ scale: 0.9 }}
-                            className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md focus:outline-none"
-                            type="button"
-                            onClick={decrementWordCount}
-                        >
-                            -
-                        </motion.button>
-                        <span className="text-lg text-gray-700 dark:text-gray-300">{wordCount}</span>
-                        <motion.button
-                            whileTap={{ scale: 0.9 }}
-                            className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md focus:outline-none"
-                            type="button"
-                            onClick={incrementWordCount}
-                        >
-                            +
-                        </motion.button>
+                    <div className="flex items-center justify-between">
+                        <span className="text-6xl text-gray-700 dark:text-gray-300">{wordCount}</span>
+                        <div className="flex flex-col space-y-2">
+                            <motion.button
+                                whileTap={{ scale: 0.9 }}
+                                className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md focus:outline-none"
+                                type="button"
+                                onClick={incrementWordCount}
+                            >
+                                +
+                            </motion.button>
+                            <motion.button
+                                whileTap={{ scale: 0.9 }}
+                                className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md focus:outline-none"
+                                type="button"
+                                onClick={decrementWordCount}
+                            >
+                                -
+                            </motion.button>
+                        </div>
                     </div>
                 </div>
                 <div>
                     <label htmlFor="qtCount" className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
                         큐티 횟수
                     </label>
-                    <div className="flex items-center space-x-4">
-                        <motion.button
-                            whileTap={{ scale: 0.9 }}
-                            className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md focus:outline-none"
-                            type="button"
-                            onClick={decrementQtCount}
-                        >
-                            -
-                        </motion.button>
-                        <span className="text-lg text-gray-700 dark:text-gray-300">{qtCount}</span>
-                        <motion.button
-                            whileTap={{ scale: 0.9 }}
-                            className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md focus:outline-none"
-                            type="button"
-                            onClick={incrementQtCount}
-                        >
-                            +
-                        </motion.button>
+                    <div className="flex items-center justify-between">
+                        <span className="text-6xl text-gray-700 dark:text-gray-300">{qtCount}</span>
+                        <div className="flex flex-col space-y-2">
+                            <motion.button
+                                whileTap={{ scale: 0.9 }}
+                                className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md focus:outline-none"
+                                type="button"
+                                onClick={incrementQtCount}
+                            >
+                                +
+                            </motion.button>
+                            <motion.button
+                                whileTap={{ scale: 0.9 }}
+                                className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md focus:outline-none"
+                                type="button"
+                                onClick={decrementQtCount}
+                            >
+                                -
+                            </motion.button>
+                        </div>
                     </div>
                 </div>
                 <div>
