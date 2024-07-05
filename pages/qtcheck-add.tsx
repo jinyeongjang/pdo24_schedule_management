@@ -67,7 +67,7 @@ const QtCheckAdd: React.FC = () => {
             setDateTime(null);
             setWordCount(0);
             setQtCount(0);
-            router.push('/qt-view?success=true'); // 큐티 확인 페이지로 이동
+            router.push('/qtcheck-view?success=true'); // 큐티 확인 페이지로 이동
         }
     };
 
