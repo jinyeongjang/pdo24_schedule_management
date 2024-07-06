@@ -24,17 +24,19 @@ const TopBar: React.FC<TopBarProps> = ({ isDarkMode, toggleDarkMode }) => {
         if (showDynamicIsland) {
             timer = setTimeout(() => {
                 setShowDynamicIsland(false);
-            }, 3000); // 3초 후에 다이나믹 아일랜드를 닫습니다.
+            }, 3000);
         }
         return () => clearTimeout(timer);
     }, [showDynamicIsland]);
 
-    const formattedTime = currentTime.toLocaleTimeString();
-    const formattedDate = currentTime.toLocaleDateString(undefined, {
+    const formattedTime = currentTime.toLocaleString('ko-KR', {
         year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        weekday: 'long',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
     });
 
     const handleToggleDarkMode = () => {
@@ -44,44 +46,42 @@ const TopBar: React.FC<TopBarProps> = ({ isDarkMode, toggleDarkMode }) => {
     };
 
     return (
-        <header className="relative bg-white dark:bg-gray-800 shadow-md p-2 flex flex-wrap justify-between items-center top-0 left-0 right-0 z-50">
+        <header className="relative bg-white dark:bg-gray-800 shadow-md p-2 flex justify-between items-center top-0 left-0 right-0 z-50">
             <div className="flex items-center">
                 <Menubar>
                     <MenubarMenu>
-                        <MenubarTrigger>
+                        <MenubarTrigger className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
                             <RxHamburgerMenu size={24} />
                         </MenubarTrigger>
                         <MenubarContent>
-                            <MenubarItem>일정 확인</MenubarItem>
-                            <MenubarItem>일정 등록</MenubarItem>
-                            <MenubarItem>로그인</MenubarItem>
-                            <MenubarItem>회원가입</MenubarItem>
+                            <MenubarItem className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700">일정 확인</MenubarItem>
+                            <MenubarItem className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700">일정 등록</MenubarItem>
+                            <MenubarItem className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700">로그인</MenubarItem>
+                            <MenubarItem className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700">회원가입</MenubarItem>
                             <MenubarSeparator />
                         </MenubarContent>
                     </MenubarMenu>
                 </Menubar>
-                <div className="ml-2 md:ml-4 text-lg font-bold text-gray-900 dark:text-white">2024 포도리더스 캘린더.</div>
+                <h1 className="ml-2 text-sm sm:text-base font-bold text-gray-900 dark:text-white truncate">2024 포도리더스 캘린더</h1>
             </div>
-            <div className="flex items-center mt-2 md:mt-0">
-                <span className="text-sm font-medium text-gray-900 dark:text-white mr-4">
-                    {formattedDate} {formattedTime}
-                </span>
-                <div className="relative inline-block w-12 h-6 mr-2 select-none transition duration-200 ease-in">
+            <div className="flex items-center">
+                <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white mr-2">{formattedTime}</span>
+                <div className="relative inline-block w-10 h-5 select-none transition duration-200 ease-in">
                     <motion.input
                         type="checkbox"
                         id="toggle"
                         checked={isDarkMode}
                         onChange={handleToggleDarkMode}
-                        className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                        className="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer"
                         layout
                     />
-                    <motion.label htmlFor="toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer dark:bg-gray-700" layout>
+                    <motion.label htmlFor="toggle" className="toggle-label block overflow-hidden h-5 rounded-full bg-gray-300 cursor-pointer dark:bg-gray-700" layout>
                         <motion.span
-                            className="absolute left-1 top-1 w-4 h-4 rounded-full bg-white shadow-md"
+                            className="absolute left-0.5 top-0.5 w-4 h-4 rounded-full bg-white shadow-md"
                             layout
                             transition={{ type: 'spring', stiffness: 700, damping: 30 }}
                             initial={false}
-                            animate={{ x: isDarkMode ? 20 : 0 }}
+                            animate={{ x: isDarkMode ? 16 : 0 }}
                         />
                     </motion.label>
                 </div>

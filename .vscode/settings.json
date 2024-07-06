@@ -1,5 +1,5 @@
 {
     "CodeGPT.Autocomplete.provider": "CodeGPT Plus - Plus",
-    "CodeGPT.Autocomplete.enabled": false,
+    "CodeGPT.Autocomplete.enabled": true,
     "CodeGPT.apiKey": "CodeGPT Plus Beta"
 }

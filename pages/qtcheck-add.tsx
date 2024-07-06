@@ -4,7 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { supabase } from '../utils/supabase';
 import { v4 as uuidv4 } from 'uuid';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const QtCheckAdd: React.FC = () => {
     const router = useRouter();
@@ -39,7 +39,6 @@ const QtCheckAdd: React.FC = () => {
 
         setLoading(true);
 
-        // 선택한 날짜와 시간을 UTC+9로 변환
         const kstDateTime = new Date(dateTime.getTime() + 9 * 60 * 60 * 1000);
         const kstCreatedAt = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
 
@@ -67,14 +66,13 @@ const QtCheckAdd: React.FC = () => {
             setDateTime(null);
             setWordCount(0);
             setQtCount(0);
-            router.push('/qtcheck-view?success=true'); // 큐티 확인 페이지로 이동
+            router.push('/qtcheck-view?success=true');
         }
     };
 
-    const incrementWordCount = () => setWordCount((prev) => prev + 1);
-    const decrementWordCount = () => setWordCount((prev) => (prev > 0 ? prev - 1 : 0));
-    const incrementQtCount = () => setQtCount((prev) => prev + 1);
-    const decrementQtCount = () => setQtCount((prev) => (prev > 0 ? prev - 1 : 0));
+    const changeCount = (setter: React.Dispatch<React.SetStateAction<number>>, amount: number) => {
+        setter((prev) => Math.max(0, prev + amount));
+    };
 
     if (!user) {
         return (
@@ -128,24 +126,30 @@ const QtCheckAdd: React.FC = () => {
                         말씀 횟수
                     </label>
                     <div className="flex items-center justify-between">
-                        <span className="text-6xl text-gray-700 dark:text-gray-300">{wordCount}</span>
+                        <AnimatePresence mode="wait">
+                            <motion.span
+                                key={wordCount}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.2 }}
+                                className="text-6xl text-gray-700 dark:text-gray-300"
+                            >
+                                {wordCount}
+                            </motion.span>
+                        </AnimatePresence>
                         <div className="flex flex-col space-y-2">
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md focus:outline-none"
-                                type="button"
-                                onClick={incrementWordCount}
-                            >
-                                +
-                            </motion.button>
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md focus:outline-none"
-                                type="button"
-                                onClick={decrementWordCount}
-                            >
-                                -
-                            </motion.button>
+                            {[1, -1, 5, -5].map((value) => (
+                                <motion.button
+                                    key={value}
+                                    whileTap={{ scale: 0.9 }}
+                                    className={`px-4 py-3 ${value < 0 ? 'bg-red-500' : 'bg-green-500'} text-white rounded-lg shadow-md focus:outline-none text-lg font-bold`}
+                                    type="button"
+                                    onClick={() => changeCount(setWordCount, value)}
+                                >
+                                    {value > 0 ? `+${value}` : value}
+                                </motion.button>
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -154,24 +158,30 @@ const QtCheckAdd: React.FC = () => {
                         큐티 횟수
                     </label>
                     <div className="flex items-center justify-between">
-                        <span className="text-6xl text-gray-700 dark:text-gray-300">{qtCount}</span>
+                        <AnimatePresence mode="wait">
+                            <motion.span
+                                key={qtCount}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.2 }}
+                                className="text-6xl text-gray-700 dark:text-gray-300"
+                            >
+                                {qtCount}
+                            </motion.span>
+                        </AnimatePresence>
                         <div className="flex flex-col space-y-2">
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md focus:outline-none"
-                                type="button"
-                                onClick={incrementQtCount}
-                            >
-                                +
-                            </motion.button>
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md focus:outline-none"
-                                type="button"
-                                onClick={decrementQtCount}
-                            >
-                                -
-                            </motion.button>
+                            {[1, -1, 5, -5].map((value) => (
+                                <motion.button
+                                    key={value}
+                                    whileTap={{ scale: 0.9 }}
+                                    className={`px-4 py-3 ${value < 0 ? 'bg-red-500' : 'bg-green-500'} text-white rounded-lg shadow-md focus:outline-none text-lg font-bold`}
+                                    type="button"
+                                    onClick={() => changeCount(setQtCount, value)}
+                                >
+                                    {value > 0 ? `+${value}` : value}
+                                </motion.button>
+                            ))}
                         </div>
                     </div>
                 </div>
